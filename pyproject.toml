@@ -1,0 +1,20 @@
+[tool.poetry]
+name = "investment data"
+version = "0.1.0"
+description = ""
+authors = ["Your Name <you@example.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.10"
+bs4 = "^0.0.1"
+selenium = "^4.9.1"
+python-dotenv = "^1.0.0"
+requests = "^2.31.0"
+pydantic = "^1.10.8"
+pytz = "^2023.3"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
