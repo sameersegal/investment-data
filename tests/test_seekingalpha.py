@@ -10,7 +10,7 @@ class SeekingAlpha(unittest.TestCase):
     def test_timeparsing(self):
         scraper = SeekingAlphaScraper('', '')
         utc = timezone('UTC')
-        
+
         date = 'May 31, 2023 6:20 AM ET'
         date = scraper._parse_time(date)
         self.assertEqual(date, datetime(
@@ -85,16 +85,19 @@ Bottom line
 
 Overall, I would neither buy PINS nor recommend doing it at current levels. The current stock price is not attractive, as my valuation analysis suggests. Moreover, the company's revenue growth pace decelerated massively compared to 2021, with margins shrinking. Given the underlying fundamentals, I expect the stock price to decline, so I assign it a "Sell" rating."""
         scraper = SeekingAlphaScraper(
-            os.getenv("USERNAME"),
-            os.getenv("PASSWORD")
+            os.getenv("SEEKING_ALPHA_USERNAME"),
+            os.getenv("SEEKING_ALPHA_PASSWORD")
         )
-        title, body = scraper.scrape(url)
+        content = scraper.scrape(url)
         # print("----")
-        # print(body)
+        # print(content.body)
         # print("----")
         # print(expected_body)
         # print("----")
 
         self.maxDiff = None
-        self.assertEqual(title, expected_title)
-        self.assertEqual(body, expected_body)
+        self.assertEqual(content.title, expected_title)
+        self.assertEqual(content.body, expected_body)
+        utc = timezone('UTC')
+        self.assertEqual(content.date, datetime(
+            2023, 5, 31, 10, 20, tzinfo=utc))

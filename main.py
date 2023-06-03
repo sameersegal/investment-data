@@ -1,5 +1,3 @@
-# Read links from a `links.log` file and scrape the data from the links
-# Once done reading, mark the link as done in the `links.log` file
 import os
 from dotenv import load_dotenv
 from scrapers import SeekingAlphaScraper, PageContent
@@ -10,7 +8,7 @@ def scrape(link: str) -> PageContent:
     scraper = None
     if link.startswith("https://seekingalpha.com"):
         scraper = SeekingAlphaScraper(
-            os.getenv('USERNAME'), os.getenv('PASSWORD'))
+            os.getenv('SEEKING_ALPHA_USERNAME'), os.getenv('SEEKING_ALPHA_PASSWORD'))
     else:
         raise Exception(f'No scraper found for the link {link}')
 
@@ -20,7 +18,7 @@ def scrape(link: str) -> PageContent:
 def main():
 
     links = []
-    with open('PINS/links.log', 'r') as f:
+    with open('links.log', 'r') as f:
         links = f.readlines()
 
     for link in links:
@@ -29,8 +27,10 @@ def main():
             content = scrape(link)
             print('date:', content.date)
             print('title:', content.title)
-            print('body:', content.body[:150] + '...' + content.body[-50:])
+            print('body:', content.body)
+            # print('body:', content.body[:150] + '...' + content.body[-50:])
             print("\n\n")
+
 
 if __name__ == '__main__':
     main()

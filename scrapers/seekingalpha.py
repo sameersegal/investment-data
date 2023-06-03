@@ -31,11 +31,11 @@ class SeekingAlphaScraper(Scraper):
 
             date = container.find('span', {'data-test-id': 'post-date'})
             date = date.get_text() if date else ''
-            date = datetime.strptime(
-                date, '%b. %d, %Y') if date else datetime.utcnow()
+            date = self._parse_time(date) if date else datetime.utcnow()
 
             title = container.find('h1')
             title = title.get_text() if title else ''
+            title = title.strip()
 
             body = container.find('div', {'data-test-id': 'article-content'}
                                   ).find('div', {'data-test-id': 'content-container'})
@@ -43,6 +43,7 @@ class SeekingAlphaScraper(Scraper):
             for t in body.children:
                 if t.name in ['p', 'h2']:
                     body_text += '\n\n' + t.get_text()
+            body_text = body_text.strip()
 
             return PageContent(title=title, body=body_text, date=date)
 
