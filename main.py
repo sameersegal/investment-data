@@ -1,6 +1,6 @@
 import os
 from dotenv import load_dotenv
-from scrapers import SeekingAlphaScraper, PageContent
+from scrapers import PageContent, SeekingAlphaScraper, MotleyFoolScraper
 load_dotenv()
 
 
@@ -9,6 +9,9 @@ def scrape(link: str) -> PageContent:
     if link.startswith("https://seekingalpha.com"):
         scraper = SeekingAlphaScraper(
             os.getenv('SEEKING_ALPHA_USERNAME'), os.getenv('SEEKING_ALPHA_PASSWORD'))
+    elif link.startswith("https://www.fool.com"):
+        scraper = MotleyFoolScraper(
+            os.getenv('MOTLEY_FOOL_USERNAME'), os.getenv('MOTLEY_FOOL_PASSWORD'))
     else:
         raise Exception(f'No scraper found for the link {link}')
 
