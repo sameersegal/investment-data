@@ -22,6 +22,11 @@ class PageContent(BaseModel):
 
 class Scraper(ABC):
 
+    username = None
+    password = None
+    session = None
+    driver = None
+
     def __init__(self, username, password) -> None:
         self.username = username
         self.password = password
@@ -64,22 +69,24 @@ class Scraper(ABC):
 
         if driver_mode == REQUESTS:
 
-            session = self._login_via_requests()
+            if not self.session:
+                self.session = self._login_via_requests()
 
             # Navigate to the next page and scrape the data
-            s = session.get(url)
+            s = self.session.get(url)
 
             html = s.text
 
         elif driver_mode == SELENIUM:
 
-            driver = self._login_via_selenium()
+            if not self.driver:
+                self.driver = self._login_via_selenium()
 
-            driver.get(url)
-            WebDriverWait(driver, 10).until(
+            self.driver.get(url)
+            WebDriverWait(self.driver, 10).until(
                 EC.presence_of_element_located((By.TAG_NAME, 'body')))
             time.sleep(10)
-            html = driver.page_source
+            html = self.driver.page_source
 
         content = self.parse_html(html)
 
@@ -95,3 +102,9 @@ class Scraper(ABC):
         content = self._parse(soup)
 
         return content
+
+    def parse_links(self, html) -> PageContent:
+
+        soup = BeautifulSoup(html, 'html.parser')
+
+        return soup

@@ -1,5 +1,7 @@
 import os
 import unittest
+
+from bs4 import BeautifulSoup
 from scrapers import MotleyFoolScraper
 from datetime import datetime
 from pytz import timezone
@@ -14,7 +16,7 @@ class MotleyFool(unittest.TestCase):
         self.assertEqual(dt, datetime(
             2023, 6, 1, 0, 0, tzinfo=timezone('UTC')))
 
-    def test_url1(self):
+    def test_scrape_page(self):
         url = "https://www.fool.com/premium/coverage/4056/coverage/2023/05/31/does-pinterest-have-10-bagger-potential/"
         expected_title = "Does Pinterest Have 10-Bagger Potential?"
         expected_body = """Pinterest (NYSE: PINS) faces some strong competition. Watch the complete show here.
@@ -52,3 +54,28 @@ Anand Chokkavelu: Fundamentally, I just can't get past. The social media company
         utc = timezone('UTC')
         self.assertEqual(content.date, datetime(
             2023, 6, 1, 0, 0, tzinfo=utc))
+        
+    def test_scrape_links(self):
+        url = "https://www.fool.com/premium/company/NYSE/PINS/"
+
+        scraper = MotleyFoolScraper(
+            os.getenv('MOTLEY_FOOL_USERNAME'), os.getenv('MOTLEY_FOOL_PASSWORD'))
+        
+        html = ''
+        with open('tests/PINS.html', 'r') as f:
+            html = f.read()
+
+        # content = scraper.parse_links(html)
+        soup = BeautifulSoup(html, 'html.parser')
+        premium_analysis = soup.find_all('h5')
+        
+        for pa in premium_analysis:
+            print(pa.text)
+            print(pa['class'])
+
+        if premium_analysis:
+            links = premium_analysis.find_next_silbling('div').find_all('a')
+            for link in links:
+                print(link['href'])
+        else:
+            self.fail("Premium Analysis not found")
