@@ -32,5 +32,5 @@ $poetry run python3 -m unittest test.test_seekingalpha.SeekingAlpha.test_url1
 ### Todos
 
 - [ ] Generate links to scrape by going to search page and typing stock code
-- [ ] Maintain session across multiple links to avoid the overhead of login
-- [ ] Write content to local file system
+- [X] Maintain session across multiple links to avoid the overhead of login
+- [X] Write content to local file system
