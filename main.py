@@ -1,7 +1,7 @@
 import os
 from urllib.parse import urlparse
 from dotenv import load_dotenv
-from scrapers import PageContent, Scraper, SeekingAlphaScraper, MotleyFoolScraper
+from scrapers import PageContent, Scraper, SeekingAlphaScraper, MotleyFoolScraper, IOFundScraper
 import weakref
 import yaml
 import hashlib
@@ -34,6 +34,9 @@ def get_scraper(link: str) -> Scraper:
     elif domain == 'fool.com':
         scraper = MotleyFoolScraper(
             os.getenv('MOTLEY_FOOL_USERNAME'), os.getenv('MOTLEY_FOOL_PASSWORD'))
+    elif domain == 'io-fund.com':
+        scraper = IOFundScraper(
+            os.getenv('IO_FUND_USERNAME'), os.getenv('IO_FUND_PASSWORD'))
     else:
         raise Exception(f'No scraper found for the link {link}')
     _scrapers[domain] = scraper
