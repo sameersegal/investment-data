@@ -28,6 +28,9 @@ $poetry run python3 -m unittest test/test_*
 # To run only a specific test
 $poetry run python3 -m unittest test.test_seekingalpha.SeekingAlpha.test_url1
 ```
+6. Instructions for Milvus (Vector Database)
+
+[https://milvus.io/docs/install_standalone-docker.md](https://milvus.io/docs/install_standalone-docker.md)
 
 ### Todos
 

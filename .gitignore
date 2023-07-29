@@ -4,3 +4,5 @@ links.log
 tests/*.html
 output/*
 !output/.gitkeep
+volumes
+docker-compose.yml

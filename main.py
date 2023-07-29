@@ -1,7 +1,7 @@
 import os
 from urllib.parse import urlparse
 from dotenv import load_dotenv
-from scrapers import PageContent, Scraper, SeekingAlphaScraper, MotleyFoolScraper, IOFundScraper
+from scrapers import PageContent, Scraper, SeekingAlphaScraper, MotleyFoolScraper
 import weakref
 import yaml
 import hashlib
@@ -10,17 +10,15 @@ load_dotenv()
 OUTPUT_DIRECTORY = os.path.join(os.getcwd(), 'output')
 
 
-def get_domain(link: str) -> str:
+def get_domain(link: str) -> str:    
     domain = urlparse(link).hostname
     parts = domain.split('.')
     if len(parts) > 2:
         domain = '.'.join(parts[-2:])
     return domain
 
-
 # _scrapers = weakref.WeakValueDictionary()
 _scrapers = {}
-
 
 def get_scraper(link: str) -> Scraper:
     domain = get_domain(link)
@@ -34,9 +32,9 @@ def get_scraper(link: str) -> Scraper:
     elif domain == 'fool.com':
         scraper = MotleyFoolScraper(
             os.getenv('MOTLEY_FOOL_USERNAME'), os.getenv('MOTLEY_FOOL_PASSWORD'))
-    elif domain == 'io-fund.com':
-        scraper = IOFundScraper(
-            os.getenv('IO_FUND_USERNAME'), os.getenv('IO_FUND_PASSWORD'))
+    # elif domain == 'io-fund.com':
+    #     scraper = IOFundScraper(
+    #         os.getenv('IO_FUND_USERNAME'), os.getenv('IO_FUND_PASSWORD'))
     else:
         raise Exception(f'No scraper found for the link {link}')
     _scrapers[domain] = scraper
@@ -55,8 +53,10 @@ def main():
     with open('links.log', 'r') as f:
         links = f.readlines()
 
-    pending_links = [link.strip() for link in links if not "$DONE$" in link]
+    pending_links = [link.strip() for link in links if link and not "$DONE$" in link]
+    pending_links = [link.strip() for link in pending_links if link and not "$SKIP$" in link]
 
+    print(pending_links[:10])
     pending_links.sort(key=lambda x: get_domain(x))
 
     print(f"Processing {len(pending_links)} out of {len(links)}")
